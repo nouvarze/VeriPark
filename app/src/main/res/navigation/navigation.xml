@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/imkbListFragment">
+    app:startDestination="@id/handshakeFragment">
 
     <fragment
         android:id="@+id/handshakeFragment"
         android:name="com.omersakalli.veripark.presentation.handshake.HandshakeFragment"
         android:label="main_fragment"
-        tools:layout="@layout/handshake_fragment" >
+        tools:layout="@layout/handshake_fragment">
         <action
             android:id="@+id/action_handshakeFragment_to_imkbListFragment"
             app:destination="@id/imkbListFragment" />
@@ -18,10 +18,14 @@
         android:id="@+id/imkbListFragment"
         android:name="com.omersakalli.veripark.presentation.imkblist.ImkbListFragment"
         android:label="fragment_imkb_list"
-        tools:layout="@layout/fragment_imkb_list" >
+        tools:layout="@layout/fragment_imkb_list">
         <action
             android:id="@+id/action_imkbListFragment_to_imkbDetailFragment"
             app:destination="@id/imkbDetailFragment" />
+        <argument
+            android:name="period"
+            android:defaultValue="all"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/imkbDetailFragment"
