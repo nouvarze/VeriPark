@@ -5,20 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.omersakalli.veripark.R
 import com.omersakalli.veripark.data.model.IMKB.ListRequest
 import com.omersakalli.veripark.databinding.FragmentImkbListBinding
-import com.omersakalli.veripark.presentation.di.core.NetModule
 import com.omersakalli.veripark.presentation.handshake.HandshakeViewModel
 import com.omersakalli.veripark.util.AES_Functions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class ImkbListFragment : Fragment() {
+class ImkbListFragment : Fragment(), ListAdapter.OnItemListener {
 
     private lateinit var binding: FragmentImkbListBinding
     private lateinit var adapter: ListAdapter
@@ -35,7 +38,6 @@ class ImkbListFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_imkb_list, container, false)
 
         imkbListViewModel = ViewModelProvider(this).get(ImkbListViewModel::class.java)
-        val imkbService = NetModule().provideImkbService()
 
         stockPeriod = requireArguments().getString("period", "all")
 
@@ -50,7 +52,7 @@ class ImkbListFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.listRecyclerview.layoutManager = LinearLayoutManager(context)
-        adapter = ListAdapter()
+        adapter = ListAdapter(this)
         binding.listRecyclerview.adapter = adapter
         displayStocks(stockPeriod)
     }
@@ -67,12 +69,12 @@ class ImkbListFragment : Fragment() {
      */
     private fun displayStocks(stockPeriod: String) {
         binding.listProgressBar.visibility = View.VISIBLE
-        handshakeViewModel.getHandshake().observe(viewLifecycleOwner, Observer { handshake ->
+        handshakeViewModel.getHandshake().observe(viewLifecycleOwner, { handshake ->
             imkbListViewModel.getImkbList(
                 handshake.authorization,
                 ListRequest(AES_Functions.encrypt(stockPeriod, handshake.aesKey, handshake.aesIV))
             ).observe(viewLifecycleOwner,
-                Observer { imkb ->
+                { imkb ->
                     if (imkb.body() != null && !imkb.body()!!.stocks.isEmpty()) {
                         adapter.setList(
                             imkb.body()!!.stocks,
@@ -86,6 +88,21 @@ class ImkbListFragment : Fragment() {
                         Toast.makeText(context, "No data available", Toast.LENGTH_LONG).show()
                     }
                 })
+        })
+    }
+
+    override suspend fun onItemClick(position: Int) {
+
+        handshakeViewModel.getHandshake().observe(this, {
+            CoroutineScope(Dispatchers.Main).launch {
+//                val detail = NetModule().provideImkbService()
+//                    .requestDetail(it.authorization, DetailRequest(AES_Functions.encrypt(,it.aesKey,it.aesIV)))
+//                    .body()
+
+                val bundle = bundleOf("detailID" to adapter.stockList[position].id.toString())
+                requireView().findNavController()
+                    .navigate(R.id.action_imkbListFragment_to_imkbDetailFragment, bundle)
+            }
         })
     }
 }

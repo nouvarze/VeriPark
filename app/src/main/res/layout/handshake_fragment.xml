@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/main_fragment"
+        android:background="#FFF"
         tools:context=".presentation.handshake.HandshakeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout

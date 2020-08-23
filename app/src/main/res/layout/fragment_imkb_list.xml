@@ -6,6 +6,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#FFF"
         tools:context=".presentation.imkblist.ImkbListFragment">
 
         <LinearLayout
@@ -37,7 +38,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.4"
                     android:gravity="center"
                     android:text="Sembol"
                     android:textSize="14sp" />
@@ -99,7 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                tools:itemCount="25"
+                tools:itemCount="22"
                 tools:listitem="@layout/list_item"
                 tools:visibility="visible" />
 
