@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/imkbListFragment">
+
+    <fragment
+        android:id="@+id/handshakeFragment"
+        android:name="com.omersakalli.veripark.presentation.handshake.HandshakeFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/handshake_fragment" >
+        <action
+            android:id="@+id/action_handshakeFragment_to_imkbListFragment"
+            app:destination="@id/imkbListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imkbListFragment"
+        android:name="com.omersakalli.veripark.presentation.imkblist.ImkbListFragment"
+        android:label="fragment_imkb_list"
+        tools:layout="@layout/fragment_imkb_list" >
+        <action
+            android:id="@+id/action_imkbListFragment_to_imkbDetailFragment"
+            app:destination="@id/imkbDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imkbDetailFragment"
+        android:name="com.omersakalli.veripark.presentation.imkbdetail.ImkbDetailFragment"
+        android:label="ImkbDetailFragment" />
+</navigation>
