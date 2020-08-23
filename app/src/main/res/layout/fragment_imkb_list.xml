@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.imkblist.ImkbListFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/searchbox"
+                android:iconifiedByDefault="false"
+                android:queryHint="Ara"
+                android:searchIcon="@null" />
 
             <LinearLayout
                 android:id="@+id/title_row"
@@ -17,77 +28,67 @@
                 android:layout_height="30dp"
                 android:background="#BBB"
                 android:orientation="horizontal"
-                android:textAlignment="center">
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:text="Sembol" />
+                    android:gravity="center"
+                    android:text="Sembol"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:text="Fiyat" />
+                    android:gravity="center"
+                    android:text="Fiyat"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:text="Fark" />
+                    android:gravity="center"
+                    android:text="Fark"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:text="Hacim" />
+                    android:gravity="center"
+                    android:text="Hacim"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:text="Alış" />
+                    android:gravity="center"
+                    android:text="Alış"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:text="Satış" />
+                    android:gravity="center"
+                    android:text="Satış"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:textAlignment="center"
-                    android:textSize="14sp"
-                    android:text="Değişim" />
+                    android:gravity="center"
+                    android:text="Değişim"
+                    android:textSize="14sp" />
 
 
             </LinearLayout>
@@ -97,24 +98,24 @@
                 android:id="@+id/list_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_row"
+                android:layout_weight="1"
                 tools:itemCount="25"
                 tools:listitem="@layout/list_item"
                 tools:visibility="visible" />
 
-            <ProgressBar
-                android:id="@+id/list_progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/list_progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </FrameLayout>
 </layout>
