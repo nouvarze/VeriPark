@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
@@ -42,6 +43,21 @@ class ImkbListFragment : Fragment(), ListAdapter.OnItemListener {
         stockPeriod = requireArguments().getString("period", "all")
 
         initRecyclerView()
+
+        binding.listSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter.filter.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                if (query == "")
+                    adapter.filter.filter(query)
+                return false
+            }
+
+        })
+
         return binding.root
     }
 

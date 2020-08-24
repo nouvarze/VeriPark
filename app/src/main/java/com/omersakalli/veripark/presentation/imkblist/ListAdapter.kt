@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.omersakalli.veripark.R
@@ -15,16 +17,35 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ListAdapter(val onItemListener: OnItemListener) :
-    RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<ListAdapter.MyViewHolder>(), Filterable {
     val stockList = ArrayList<Stock>()
-    private var aesKey = ""
-    private var aesIV = ""
+    val stockListFull = ArrayList<Stock>()
 
     fun setList(stocks: List<Stock>, aesKey: String, aesIV: String) {
         stockList.clear()
-        stockList.addAll(stocks)
-        this.aesKey = aesKey
-        this.aesIV = aesIV
+        stockListFull.clear()
+
+        stocks.forEach {
+            stockList.add(
+                Stock(
+                    it.bid,
+                    it.difference,
+                    it.id,
+                    it.isDown,
+                    it.isUp,
+                    it.offer,
+                    it.price,
+                    AES_Functions.decrypt(
+                        it.symbol,
+                        aesKey,
+                        aesIV
+                    ),
+                    it.volume
+                )
+            )
+        }
+
+        stockListFull.addAll(stockList)
 
     }
 
@@ -36,7 +57,7 @@ class ListAdapter(val onItemListener: OnItemListener) :
             parent,
             false
         )
-        return MyViewHolder(binding, aesKey, aesIV, onItemListener)
+        return MyViewHolder(binding, onItemListener)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -52,8 +73,6 @@ class ListAdapter(val onItemListener: OnItemListener) :
 
     class MyViewHolder(
         val binding: ListItemBinding,
-        val aesKey: String,
-        val aesIV: String,
         val onItemListener: OnItemListener
     ) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
@@ -61,35 +80,31 @@ class ListAdapter(val onItemListener: OnItemListener) :
 
         fun bind(stock: Stock) {
             var darkBackground: Boolean = true
-            if (aesKey != "")
-                binding.apply {
-                    symbol.text = AES_Functions.decrypt(
-                        stock.symbol,
-                        aesKey,
-                        aesIV
-                    )
-                    price.text = stock.price.toString()
-                    difference.text = stock.difference.toString()
-                    bid.text = stock.bid.toString()
-                    offer.text = stock.offer.toString()
-                    volume.text = stock.volume.toString().subSequence(0, 3)
 
-                    if (stock.isUp) {
-                        change.text = "▲"
-                        change.setTextColor(Color.GREEN)
-                    } else if (stock.isDown) {
-                        change.text = "▼"
-                        change.setTextColor(Color.RED)
-                    } else {
-                        change.text = "━"
-                        change.setTextColor(Color.parseColor("#FFA500"))
-                    }
+            binding.apply {
+                price.text = stock.price.toString()
+                difference.text = stock.difference.toString()
+                bid.text = stock.bid.toString()
+                offer.text = stock.offer.toString()
+                volume.text = stock.volume.toString().subSequence(0, 3)
+                symbol.text = stock.symbol
 
-                    listItem.setOnClickListener {
-                        onClick(listItem)
-                    }
-
+                if (stock.isUp) {
+                    change.text = "▲"
+                    change.setTextColor(Color.GREEN)
+                } else if (stock.isDown) {
+                    change.text = "▼"
+                    change.setTextColor(Color.RED)
+                } else {
+                    change.text = "━"
+                    change.setTextColor(Color.parseColor("#FFA500"))
                 }
+
+                listItem.setOnClickListener {
+                    onClick(listItem)
+                }
+
+            }
         }
 
         override fun onClick(p0: View?) {
@@ -103,6 +118,35 @@ class ListAdapter(val onItemListener: OnItemListener) :
 
     interface OnItemListener {
         suspend fun onItemClick(position: Int)
+    }
+
+    override fun getFilter(): Filter {
+        return stockFilter
+    }
+
+    private val stockFilter: Filter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val filteredList = ArrayList<Stock>()
+            if (constraint == null || constraint.length == 0) filteredList.addAll(stockListFull)
+            else {
+                val filterPattern = constraint.toString().toLowerCase().trim()
+
+                stockListFull.forEach {
+                    if (it.symbol.toLowerCase().contains(filterPattern))
+                        filteredList.add(it)
+                }
+            }
+            val results = FilterResults()
+            results.values = filteredList
+            return results
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            stockList.clear()
+            stockList.addAll(results!!.values as ArrayList<Stock>)
+            notifyDataSetChanged()
+        }
+
     }
 }
 
